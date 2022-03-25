@@ -1,3 +1,13 @@
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* general */
+
+
+/* Home Page */
 #login {
     text-align: center;
 }
@@ -5,4 +15,34 @@
 .form-input {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    background-color: #5C9EAD;
+    justify-content: flex-end;
+}
+
+nav a {
+    background-color: #EEEEEE;
+    padding: 20px;
+    margin-right: 20px;
+    text-decoration: none;
+    color: #E39774;
+}
+
+/* Student Page */
+.student-grid-container {
+    display: grid;
+    grid-template-areas: 
+        "a-table a-table a-table a-form"
+}
+
+.student-grid-container #student-assignments-table {
+    grid-area: a-table;
+}
+
+.student-grid-container #assignment-submit-form {
+    grid-area: a-form;
 }

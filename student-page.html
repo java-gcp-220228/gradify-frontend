@@ -5,25 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gradify | Student Page</title>
+    <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
+    <nav> <!-- Semantic tag (behaves the same as a div tag) -->
+        <a href="about-me.html">About Me</a>
+        <a href="#" id="logout-btn">Logout</a> <!-- # indicates a deadlink that doesn't go anywhere -->
+    </nav>
+
     <h1>Welcome to the Student page</h1>
 
-    <h2>Assignments Table</h2>
-    <table id="assignments-tbl">
-        <thead>
-            <th>Assignment Id</th>
-            <th>Assignment Name</th>
-            <th>Grade</th>
-            <th>Student Username</th>
-            <th>Grader Username</th>
-        </thead>
-        <tbody>
+    <div class="student-grid-container">
+        <div id="student-assignments-table">
+            <h2>Assignments Table</h2>
+            <table id="assignments-tbl">
+                <thead>
+                    <th>Assignment Id</th>
+                    <th>Assignment Name</th>
+                    <th>Grade</th>
+                    <th>Student Username</th>
+                    <th>Grader Username</th>
+                </thead>
+                <tbody>
 
-        </tbody>
-    </table>
-
-    <button id="logout-btn">logout</button>
+                </tbody>
+            </table>
+        </div>
+        <div id="assignment-submit-form">
+            <h2>Submit Assignment</h2>
+            <div>
+                <label for="a-name-input">Assignment Name:</label>
+                <input id="a-name-input" type="text" />
+            </div>
+            <div>
+                <label for="a-file-input">Assignment Image (PNG, GIF, JPEG):</label>
+                <input type="file" id="a-file-input" />
+            </div>
+            <button id="a-submit">Submit</button>
+        </div>
+    </div>
+    
 
     <script src="student-page.js"></script>
 </body>

@@ -1,6 +1,8 @@
 let logoutBtn = document.querySelector('#logout-btn');
 
 logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_id');
     localStorage.removeItem('jwt');
 
     window.location = '/index.html';
@@ -11,7 +13,7 @@ window.addEventListener('load', (event) => {
 });
 
 async function populateAssignmentsTable() {
-    const URL = 'http://35.225.55.157:8080/assignments';
+    const URL = 'http://localhost:8081/assignments';
 
     let res = await fetch(URL, {
         method: 'GET',
@@ -24,6 +26,11 @@ async function populateAssignmentsTable() {
     if (res.status === 200) {
         let assignments = await res.json();
 
+        let tbody = document.querySelector('#assignments-tbl > tbody');
+        tbody.innerHTML = ''; // clear out the tbody
+
+        // Iterate through assignments from the GET /assignments request
+        // and populate table
         for (let assignment of assignments) {
             let tr = document.createElement('tr');
 
@@ -50,7 +57,55 @@ async function populateAssignmentsTable() {
             tr.appendChild(td4);
             tr.appendChild(td5);
 
-            let tbody = document.querySelector('#assignments-tbl > tbody');
+            let td6 = document.createElement('td');
+            let imgElement = document.createElement('img');
+            imgElement.setAttribute('src', `http://localhost:8081/assignments/${assignment.id}/image`);
+            imgElement.style.height = '100px';
+            td6.appendChild(imgElement);
+
+            tr.appendChild(td6);
+
+            // Populate assignments that aren't graded with an input and grade button
+            if (!assignment.graderUsername) { // If the assignment hasn't been graded yet
+                let gradeInput = document.createElement('input');
+                gradeInput.setAttribute('type', 'number'); // <input type="number" />
+                gradeInput.setAttribute('min', '0');
+                gradeInput.setAttribute('max', '100');
+
+                let gradeButton = document.createElement('button');
+                gradeButton.innerText = 'Grade Assignment';
+
+                // Whenever the grade button is clicked, send a PATCH request to change the grade
+                // of an assignment (providing a valid JSON web token from localStorage that we received
+                // when logging in) and repopulate the assignments table again
+                gradeButton.addEventListener('click', async () => {
+                    let grade = gradeInput.value;
+
+                    try {
+                        let res = await fetch(`http://localhost:8081/assignments/${assignment.id}?grade=${grade}`, {
+                            // credentials: 'include' // HttpSession based login + authorization
+                            method: 'PATCH',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('jwt')}` // Include our JWT into the request
+                            }
+                        });
+
+                        if (res.status === 200) {
+                            populateAssignmentsTable(); // Have this function call itself
+                        }
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    
+                });
+
+                tr.appendChild(gradeInput);
+                tr.appendChild(gradeButton);
+            }
+
+            
+
             tbody.appendChild(tr);
         }
     }
